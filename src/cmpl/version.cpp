@@ -13,7 +13,7 @@ version.
 
 using namespace cmpl;
 
-const Version cmpl::VERSION = {0, 0, 1};
+const Version cmpl::VERSION = {0, 0, 2, {"dev"}};
 
 void Version::print() const {
     printf("Cmpl %d.%d.%d", _major, _minor, _patch);

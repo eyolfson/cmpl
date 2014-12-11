@@ -16,9 +16,6 @@ version.
 #include <cstdio>
 #include <cstring>
 
-#include <utility>
-#include <vector>
-
 using namespace cmpl;
 
 int main(int argc, char const * const * argv)
@@ -63,7 +60,8 @@ int main(int argc, char const * const * argv)
             const Path project_bin_path = project_path.append("bin");
             if (!project_bin_path.make()) return 1;
             const Path target_path = project_bin_path.append(target.c_str());
-            printf("\e[36;1m[Link]\e[0m    \e[36m%s\e[0m\n", target.c_str());
+            printf("\e[36;1m[Link]\e[0m    \e[36m%s\e[0m\n",
+                   target_path.c_str() + project_path.length() + 1);
             clang_link_binary(object_paths, target_path);
         }
     }
