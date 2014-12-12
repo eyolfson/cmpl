@@ -1,0 +1,4 @@
+standard c++14
+optimization-level 2
+libraries
+  + sqlite3
