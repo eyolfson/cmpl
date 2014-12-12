@@ -54,5 +54,7 @@ leverage them in code analysis and editors.
 ## Related Projects
 
 * [Make][] - Far more general and not as useful to me
+* [Tup][] - Similar idea to this, but a more general focus
 
 [Make]: http://www.gnu.org/software/make/
+[Tup]: http://gittup.org/tup/
