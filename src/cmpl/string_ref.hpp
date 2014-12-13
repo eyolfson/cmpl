@@ -19,7 +19,7 @@ class StringRef {
     size_t _length;
 public:
     StringRef() : _data(nullptr), _length(0) {}
-    // explicit StringRef(char const * c_str);
+    StringRef(char const * c_str);
     StringRef(char const * c_str, size_t length)
         : _data(c_str), _length(length) {}
     template<size_t L> StringRef(const char (& static_c_str) [L])

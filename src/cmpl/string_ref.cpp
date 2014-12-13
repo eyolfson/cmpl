@@ -9,6 +9,15 @@ version.
 
 #include "string_ref.hpp"
 
+#include <cstring>
+
+using namespace cmpl;
+
+StringRef::StringRef(const char * c_str) : _data(c_str) {
+    size_t c_str_len = std::strlen(c_str);
+    _length = c_str_len;
+}
+
 bool cmpl::operator==(const StringRef& string_ref, const char * c_str) {
     for (size_t i = 0; i < string_ref._length; ++i) {
         if (c_str[i] == '\0') return false;
