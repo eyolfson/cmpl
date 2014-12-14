@@ -10,16 +10,23 @@ version.
 #include "file_desc.hpp"
 
 #include <fcntl.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 using namespace cmpl;
 
 FileDesc::FileDesc(const Path& path) {
-    fd = open(path.c_str(), O_RDONLY);
+    _fd = open(path.c_str(), O_RDONLY);
 }
 
 FileDesc::~FileDesc() {
     if (is_valid()) {
-        close(fd);
+        close(_fd);
     }
+}
+
+size_t FileDesc::size() {
+    struct stat sb;
+    if (fstat(_fd, &sb) == -1) return 0;
+    return sb.st_size;
 }

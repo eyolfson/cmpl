@@ -15,12 +15,14 @@ version.
 namespace cmpl {
 
 class FileDesc {
-    int fd;
+    int _fd;
 public:
     explicit FileDesc(const Path& path);
     ~FileDesc();
-    bool is_valid() { return fd >= 0; }
+    bool is_valid() { return _fd >= 0; }
     bool is_invalid() { return !is_valid(); }
+    int fd() { return _fd; }
+    size_t size();
 };
 
 }
