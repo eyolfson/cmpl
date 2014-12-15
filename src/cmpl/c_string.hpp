@@ -15,14 +15,15 @@ version.
 namespace cmpl {
 
 class CString {
-    char * _data;
-    size_t _length;
-    size_t _capacity;
+    char * _data{ nullptr };
+    size_t _length{ 0 };
+    size_t _capacity{ 0 };
 public:
-    CString() : _data(nullptr), _length(0), _capacity(0) {}
+    CString() {}
     CString(const CString& c_string);
     CString(CString&& c_string);
     explicit CString(char const * c_str);
+    CString(char const * c_str, size_t length);
     ~CString();
 
     bool is_invalid() const { return _length == 0; } 
@@ -38,6 +39,8 @@ public:
     CString& append(const char * c_str);
     void reserve(size_t capacity);
     void recalculate_length();
+private:
+    void init_from_c_str(char const * c_str, size_t length);
 };
     
 bool operator==(const CString& c_string, const char * c_str);

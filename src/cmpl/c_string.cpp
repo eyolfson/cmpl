@@ -14,6 +14,15 @@ version.
 
 using namespace cmpl;
 
+void CString::init_from_c_str(const char * c_str, size_t length) {
+    size_t required_capacity = length + 1;
+    reserve(required_capacity);
+    if (_capacity >= required_capacity) {
+        std::strcpy(_data, c_str);
+        _length = length;
+    }
+}
+
 CString::CString(const CString& c_string) {
     _data = static_cast<char *>(std::malloc(c_string._capacity));
     if (_data == nullptr) {
@@ -36,15 +45,12 @@ CString::CString(CString&& c_string) {
     c_string._capacity = 0;
 }
 
-CString::CString(char const * c_str)
-    : _data(nullptr), _length(0), _capacity(0) {
-    size_t c_str_len = std::strlen(c_str);
-    size_t required_capacity = c_str_len + 1;
-    reserve(required_capacity);
-    if (_capacity >= required_capacity) {
-        std::strcpy(_data, c_str);
-        _length = c_str_len;
-    }
+CString::CString(char const * c_str) {
+    init_from_c_str(c_str, std::strlen(c_str));
+}
+
+CString::CString(char const * c_str, size_t length) {
+    init_from_c_str(c_str, length);
 }
 
 CString::~CString() {
