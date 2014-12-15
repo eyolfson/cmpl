@@ -15,15 +15,18 @@ version.
 namespace cmpl {
 
 class StringRef {
-    char const * _data;
+    const char * _data;
     size_t _length;
 public:
     StringRef() : _data(nullptr), _length(0) {}
-    StringRef(char const * c_str);
-    StringRef(char const * c_str, size_t length)
+    StringRef(const char * c_str);
+    StringRef(const char * c_str, size_t length)
         : _data(c_str), _length(length) {}
     template<size_t L> StringRef(const char (& static_c_str) [L])
         : _data(static_c_str), _length(L - 1) {}
+
+    const char * data() { return _data; }
+    size_t length() { return _length; }
 
     friend bool operator==(const StringRef& lhs, const StringRef& rhs);
     friend bool operator==(const StringRef& string_ref, const char * c_str);
