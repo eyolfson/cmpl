@@ -18,6 +18,14 @@ StringRef::StringRef(const char * c_str) : _data(c_str) {
     _length = c_str_len;
 }
 
+bool cmpl::operator==(const StringRef& lhs, const StringRef& rhs) {
+    if (lhs._length != rhs._length) return false;
+    for (size_t i = 0; i < lhs._length; ++i) {
+        if (lhs._data[i] != rhs._data[i]) return false;
+    }
+    return true;
+}
+
 bool cmpl::operator==(const StringRef& string_ref, const char * c_str) {
     for (size_t i = 0; i < string_ref._length; ++i) {
         if (c_str[i] == '\0') return false;
