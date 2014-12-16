@@ -12,6 +12,8 @@ version.
 
 #include <cstddef>
 
+#include "string_ref.hpp"
+
 namespace cmpl {
 
 class CString {
@@ -37,6 +39,7 @@ public:
     bool ends_with(const char * c_str) const;
     CString& remove_ending(const char * c_str);
     CString& append(const char * c_str);
+    CString& append(const StringRef& string_ref);
     void reserve(size_t capacity);
     void recalculate_length();
 private:

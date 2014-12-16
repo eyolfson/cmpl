@@ -106,6 +106,16 @@ CString& CString::append(const char * c_str) {
     return *this;
 }
 
+CString& CString::append(const StringRef& string_ref) {
+    size_t required_capacity = _length + string_ref.length() + 1;
+    reserve(required_capacity);
+    if (_capacity >= required_capacity) {
+        std::strncat(_data, string_ref.data(), string_ref.length());
+        _length += string_ref.length();
+    }
+    return *this;
+}
+
 void CString::reserve(size_t capacity) {
     if (capacity > _capacity) {
         char * realloc = static_cast<char *>(std::realloc(_data, capacity));
