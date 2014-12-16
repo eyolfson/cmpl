@@ -25,8 +25,8 @@ public:
     template<size_t L> StringRef(const char (& static_c_str) [L])
         : _data(static_c_str), _length(L - 1) {}
 
-    const char * data() { return _data; }
-    size_t length() { return _length; }
+    const char * data() const { return _data; }
+    size_t length() const { return _length; }
 
     friend bool operator==(const StringRef& lhs, const StringRef& rhs);
     friend bool operator==(const StringRef& string_ref, const char * c_str);
