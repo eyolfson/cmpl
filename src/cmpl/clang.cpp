@@ -14,14 +14,17 @@ version.
 
 using namespace cmpl;
 
-bool cmpl::clang_compile(const Path& input, const Path& output) {
+bool cmpl::clang_compile(const Path& input, const Path& output,
+                         const std::vector<CString>& cxx_flags) {
     pid_t pid = fork();
     if (pid == -1) return false;
     if (pid == 0) {
         std::vector<char *> argv;
         argv.push_back(const_cast<char *>("clang++"));
         argv.push_back(const_cast<char *>("-c"));
-        argv.push_back(const_cast<char *>("-std=c++14"));
+        for (const auto& flag : cxx_flags) {
+            argv.push_back(const_cast<CString&>(flag).mut_c_str());
+        }
         argv.push_back(const_cast<char *>("-o"));
         argv.push_back(const_cast<char *>(output.c_str()));
         argv.push_back(const_cast<char *>(input.c_str()));
@@ -39,17 +42,21 @@ bool cmpl::clang_compile(const Path& input, const Path& output) {
     }
 }
 
-bool cmpl::clang_link_binary(std::vector<Path>& inputs, const Path& output) {
+bool cmpl::clang_link_binary(std::vector<Path>& inputs, const Path& output,
+                             const std::vector<CString>& linker_flags) {
     pid_t pid = fork();
     if (pid == -1) return false;
     if (pid == 0) {
         std::vector<char *> argv;
         argv.push_back(const_cast<char *>("clang++"));
-        for (const auto& input : inputs) {
-            argv.push_back(const_cast<char *>(input.c_str()));
+        for (const auto& flag : linker_flags) {
+            argv.push_back(const_cast<CString&>(flag).mut_c_str());
         }
         argv.push_back(const_cast<char *>("-o"));
         argv.push_back(const_cast<char *>(output.c_str()));
+        for (const auto& input : inputs) {
+            argv.push_back(const_cast<char *>(input.c_str()));
+        }
         argv.push_back(nullptr);
         execvp(argv[0],
                argv.data());

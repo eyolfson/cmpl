@@ -34,8 +34,10 @@ public:
     bool is_invalid() const { return !is_valid(); }
     void read() const;
     
-    std::vector<Path> compile_files(const Path& project_path,
-                                    const Path& target_path) const;
+    std::vector<Path> compile_files(
+        const Path& project_path,
+        const Path& target_path,
+        const std::vector<CString>& cxx_flags) const;
     std::vector<CString> read_dir_c_strings() const;
 };
 

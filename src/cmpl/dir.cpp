@@ -37,8 +37,10 @@ void Dir::read() const {
     }    
 }
 
-std::vector<Path> Dir::compile_files(const Path& project_path,
-                                     const Path& target_path) const {
+std::vector<Path> Dir::compile_files(
+    const Path& project_path,
+    const Path& target_path,
+    const std::vector<CString>& cxx_flags) const {
     std::vector<Path> vector;
 
     if (is_invalid()) return std::move(vector);
@@ -59,7 +61,7 @@ std::vector<Path> Dir::compile_files(const Path& project_path,
                 /* Compile */
                 printf("\e[34;1m[Compile]\e[0m \e[34m%s\e[0m\n",
                        output.c_str() + (project_path.length() + 1));
-                clang_compile(input, output);
+                clang_compile(input, output, cxx_flags);
                 vector.push_back(std::move(output));
             }
         }

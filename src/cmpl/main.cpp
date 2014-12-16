@@ -10,6 +10,7 @@ version.
 #include "c_string.hpp"
 #include "clang.hpp"
 #include "dir.hpp"
+#include "parser.hpp"
 #include "path.hpp"
 #include "version.hpp"
 
@@ -31,6 +32,7 @@ int main(int argc, char const * const * argv)
     /* Look for project file */
     const Path project_file_path = Path::find_file("project.cmpl");
     if (project_file_path.is_invalid()) return 1;
+    Parser parser(project_file_path);
 
     /* Compile the files in post order, at the root, link */
     const Path project_path = project_file_path.dirname();
@@ -47,14 +49,14 @@ int main(int argc, char const * const * argv)
     for (const auto& target : targets) {
         const Path target_src_path = project_src_path.append(target.c_str());
         const Path target_cmpl_path = project_cmpl_path.append(target.c_str());
-        // printf("t_c_p: %s\n", target_cmpl_path.c_str());
         if (!target_cmpl_path.make()) return 2;
 
         std::vector<Path> object_paths;
         {
             Dir dir(target_src_path);
             object_paths = dir.compile_files(project_cmpl_path,
-                                             target_cmpl_path);
+                                             target_cmpl_path,
+                                             parser.cxx_flags());
         }
         if (!target.starts_with("lib")) {
             const Path project_bin_path = project_path.append("bin");
@@ -62,7 +64,7 @@ int main(int argc, char const * const * argv)
             const Path target_path = project_bin_path.append(target.c_str());
             printf("\e[36;1m[Link]\e[0m    \e[36m%s\e[0m\n",
                    target_path.c_str() + project_path.length() + 1);
-            clang_link_binary(object_paths, target_path);
+            clang_link_binary(object_paths, target_path, parser.linker_flags());
         }
     }
     return 0;
