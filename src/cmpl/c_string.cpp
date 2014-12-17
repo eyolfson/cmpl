@@ -18,7 +18,8 @@ void CString::init_from_c_str(const char * c_str, size_t length) {
     size_t required_capacity = length + 1;
     reserve(required_capacity);
     if (_capacity >= required_capacity) {
-        std::strcpy(_data, c_str);
+        std::strncpy(_data, c_str, length);
+        _data[length] = '\0';
         _length = length;
     }
 }
