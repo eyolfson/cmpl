@@ -33,6 +33,7 @@ int main(int argc, char const * const * argv)
     const Path project_file_path = Path::find_file("project.cmpl");
     if (project_file_path.is_invalid()) return 1;
     Parser parser(project_file_path);
+    if (parser.is_invalid()) return 2;
 
     /* Compile the files in post order, at the root, link */
     const Path project_path = project_file_path.dirname();

@@ -1,4 +1,4 @@
-# Cmpl 0.0.2-dev
+# Cmpl 0.0.2
 
 A research C/C++ build system
 

@@ -20,11 +20,10 @@ bool cmpl::clang_compile(const Path& input, const Path& output,
     if (pid == -1) return false;
     if (pid == 0) {
         std::vector<char *> argv;
-        argv.push_back(const_cast<char *>("clang++"));
-        argv.push_back(const_cast<char *>("-c"));
         for (const auto& flag : cxx_flags) {
-            argv.push_back(const_cast<CString&>(flag).mut_c_str());
+            argv.push_back(const_cast<char *>(flag.c_str()));
         }
+        argv.push_back(const_cast<char *>("-c"));
         argv.push_back(const_cast<char *>("-o"));
         argv.push_back(const_cast<char *>(output.c_str()));
         argv.push_back(const_cast<char *>(input.c_str()));
@@ -48,9 +47,8 @@ bool cmpl::clang_link_binary(std::vector<Path>& inputs, const Path& output,
     if (pid == -1) return false;
     if (pid == 0) {
         std::vector<char *> argv;
-        argv.push_back(const_cast<char *>("clang++"));
         for (const auto& flag : linker_flags) {
-            argv.push_back(const_cast<CString&>(flag).mut_c_str());
+            argv.push_back(const_cast<char *>(flag.c_str()));
         }
         argv.push_back(const_cast<char *>("-o"));
         argv.push_back(const_cast<char *>(output.c_str()));

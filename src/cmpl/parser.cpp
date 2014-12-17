@@ -46,7 +46,26 @@ Parser::Parser(const Path& path) {
     const char * data = data_begin;
     size_t offset{ 0 };
 
-    size_t matched = expect("standard ", data, length - offset);
+    size_t matched = expect("driver ", data, length - offset);
+    if (matched == 0) {
+        return;
+    }
+    offset += matched;
+    data = &data_begin[offset];
+
+    {
+        matched = until_newline(data, length - offset);
+        if (matched == 0) {
+            return;
+        }
+        CString driver{data, matched};
+        _cxx_flags.push_back(driver);
+        _linker_flags.push_back(driver);
+    }
+    offset += matched;
+    data = &data_begin[offset];
+
+    matched = expect("\nstandard ", data, length - offset);
     if (matched == 0) {
         return;
     }
