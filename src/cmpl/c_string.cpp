@@ -50,8 +50,8 @@ CString::CString(char const * c_str) {
     init_from_c_str(c_str, std::strlen(c_str));
 }
 
-CString::CString(char const * c_str, size_t length) {
-    init_from_c_str(c_str, length);
+CString::CString(char const * buffer, size_t length) {
+    init_from_c_str(buffer, length);
 }
 
 CString::~CString() {

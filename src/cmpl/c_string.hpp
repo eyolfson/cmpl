@@ -21,11 +21,11 @@ class CString {
     size_t _length{ 0 };
     size_t _capacity{ 0 };
 public:
-    CString() {}
+    constexpr CString() {}
     CString(const CString& c_string);
     CString(CString&& c_string);
     explicit CString(char const * c_str);
-    CString(char const * c_str, size_t length);
+    CString(char const * buffer, size_t length);
     ~CString();
 
     bool is_invalid() const { return _length == 0; } 
