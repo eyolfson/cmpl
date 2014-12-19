@@ -16,7 +16,7 @@ version.
 
 namespace cmpl {
 
-class CString {
+class CString final {
     char * _data{ nullptr };
     size_t _length{ 0 };
     size_t _capacity{ 0 };
