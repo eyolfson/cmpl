@@ -15,9 +15,11 @@ version.
 
 #include <vector>
 
+#include <unistd.h>
+
 namespace cmpl {
 
-bool clang_compile(const Path& input, const Path& output,
+pid_t clang_compile(const Path& input, const Path& output,
                    const std::vector<CString>& cxx_flags);
 bool clang_link_binary(std::vector<Path>& inputs, const Path& output,
                        const std::vector<CString>& linker_flags);

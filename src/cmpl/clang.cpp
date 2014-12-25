@@ -14,10 +14,10 @@ version.
 
 using namespace cmpl;
 
-bool cmpl::clang_compile(const Path& input, const Path& output,
+pid_t cmpl::clang_compile(const Path& input, const Path& output,
                          const std::vector<CString>& cxx_flags) {
     pid_t pid = fork();
-    if (pid == -1) return false;
+    if (pid == -1) return pid;
     if (pid == 0) {
         std::vector<char *> argv;
         for (const auto& flag : cxx_flags) {
@@ -32,13 +32,7 @@ bool cmpl::clang_compile(const Path& input, const Path& output,
                argv.data());
         _exit(-1);
     }
-    else {
-        int stat_val;
-        wait(&stat_val);
-        if (WIFEXITED(stat_val) == 0) return false;
-        if (WEXITSTATUS(stat_val) != 0) return false;
-        return true;
-    }
+    return pid;
 }
 
 bool cmpl::clang_link_binary(std::vector<Path>& inputs, const Path& output,

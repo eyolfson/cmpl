@@ -12,6 +12,8 @@ version.
 #include <cstdio>
 #include <cstring>
 
+#include <sys/wait.h>
+
 #include "clang.hpp"
 
 using namespace cmpl;
@@ -42,6 +44,7 @@ std::vector<Path> Dir::compile_files(
     const Path& target_path,
     const std::vector<CString>& cxx_flags) const {
     std::vector<Path> vector;
+    std::vector<pid_t> processes(8, -1);
 
     if (is_invalid()) return std::move(vector);
 
@@ -58,15 +61,63 @@ std::vector<Path> Dir::compile_files(
                 name.remove_ending(".cpp");
                 name.append(".o");
                 Path output = target_path.append(name.c_str());
+                bool running = false;
+                for (auto& process : processes) {
+                    if (process <= 0) {
+                        printf("\e[34;1m[Compile]\e[0m \e[34m%s\e[0m\n",
+                            output.c_str() + (project_path.length() + 1));
+                        process = clang_compile(input, output, cxx_flags);
+                        running = true;
+                        break;
+                    }
+                }
+                if (!running) {
+                    int stat_val;
+                    pid_t pid = wait(&stat_val);
+                    if (WIFEXITED(stat_val) == 0) {
+                        // Problem
+                    }
+                    if (WEXITSTATUS(stat_val) != 0) {
+                        // Problem
+                    }
+                    for (auto& process : processes) {
+                        if (pid == process) {
+                            printf("\e[34;1m[Compile]\e[0m \e[34m%s\e[0m\n",
+                                output.c_str() + (project_path.length() + 1));
+                            process = clang_compile(input, output, cxx_flags);
+                        }
+                    }
+                }
                 /* Compile */
-                printf("\e[34;1m[Compile]\e[0m \e[34m%s\e[0m\n",
-                       output.c_str() + (project_path.length() + 1));
-                clang_compile(input, output, cxx_flags);
                 vector.push_back(std::move(output));
             }
         }
         else if (entry->d_type == DT_DIR) {
             printf("TODO: Directory nested in target directory");
+        }
+    }
+
+    bool all_done = false;
+    while(!all_done) {
+        all_done = true;
+        for (auto& process : processes) {
+            if (process > 0) {
+                all_done = false;
+                break;
+            }
+        }
+        int stat_val;
+        pid_t pid = wait(&stat_val);
+        if (WIFEXITED(stat_val) == 0) {
+            // Problem
+        }
+        if (WEXITSTATUS(stat_val) != 0) {
+            // Problem
+        }
+        for (auto& process : processes) {
+            if (pid == process) {
+                process = 0;
+            }
         }
     }
 
